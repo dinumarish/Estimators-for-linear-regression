@@ -1,0 +1,38 @@
+class ols
+    
+    
+    def __init__(self,X,y):
+        '''Function accepts dataframes as independent variable X and dependent variable y as inputs to perform regression to find the estimators, prediction and 
+        R squared scores of the regression'''
+        cols = X.columns
+        X = np.array(X)
+        X = np.c_[np.ones(X.shape[0]),X]
+        y = np.array(y)
+
+        Xt = np.transpose(X)
+
+        t1 = np.linalg.inv(np.dot(Xt,X))
+
+        t2 = np.dot(Xt,y)
+        
+        global w
+
+        w = np.dot(t1,t2)   
+        
+        prediction = np.dot(X,w)  
+
+        mu = np.mean(y)
+        var1 = np.array((y-mu)**2)
+        var2 = np.array((prediction -y)**2)
+
+        R2   = 1- (np.sum(var2)/np.sum(var1))
+
+
+        self.constant = w[0]
+        self.weights = w[1:]
+        
+        self.prediction = prediction
+        self.r2 = R2   
+        self.summary = pd.DataFrame({'constant term':self.constant,'weights':self.weights,'R Squared':self.r2},index=cols)
+        
+    
